@@ -5,7 +5,9 @@ import React from 'react'
 
 const page = async () => {
   const session = await auth()
-  if (!session) redirect('/')
+  if (!session) {
+    redirect('/login?callbackUrl=/startup/create')
+  }
 
   return (
     <div className="min-h-full flex justify-center">

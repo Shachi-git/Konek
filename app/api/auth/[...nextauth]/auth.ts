@@ -17,14 +17,20 @@ export const { auth, handlers } = NextAuth({
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        if (!credentials) return null
+        if (!credentials?.username || !credentials?.password) return null
 
         const identifier = credentials.username
 
         // Fetch user from Sanity by username or email
         const user = await client.fetch(AUTHOR_BY_IDENTIFIER_QUERY, { identifier })
 
-        if (!user) return null
+        if (!user || !user.password) return null
+
+        // Verify password using bcrypt
+        const bcrypt = require('bcryptjs')
+        const isValidPassword = await bcrypt.compare(credentials.password, user.password)
+
+        if (!isValidPassword) return null
 
         // Return minimal user info for token
         return {

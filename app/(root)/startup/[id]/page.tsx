@@ -14,7 +14,7 @@ export const experimental_ppr = true
 const page = async ({ params }: { params: Promise<{ id: string }> }) => {
   const id = (await params).id
   const md = markdownit()
-  let post;
+  let post
   try {
     post = await client.fetch(STARTUPS_BY_ID_QUERY, { id })
     if (!post) return notFound()
@@ -31,15 +31,18 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
 
   return (
     <div>
-      <section
-        className="bg-linear-to-tr from-blue-500 to-gray-500 rounded-xl p-11 shadow-inner shadow-gray-950 flex flex-col items-center 
-      opacity-90 justify-center"
-      >
-        <p className="semiheading">{formatDate(post._createdAt)}</p>
-        <h1 className="heading mb-2">{post.title}</h1>
-        <p className="semiheading text-center text-lg">
-          {post.description || 'No description available for this startup.'}
-        </p>
+      <section className="w-full overflow-hidden justify-center items-center">
+        <div className="bg-gradient-to-tr from-blue-500 to-gray-500 rounded-xl px-4 py-8 md:px-8 md:py-12 shadow-inner shadow-gray-950 flex flex-col items-center opacity-90 justify-center w-full ">
+          <time className="text-gray-100 text-base md:text-lg font-medium mb-4">
+            {formatDate(post._createdAt)}
+          </time>
+          <h1 className="text-2xl md:text-4xl font-bold text-white text-center mb-4 leading-tight max-w-full">
+            {post.title}
+          </h1>
+          <p className="text-base md:text-lg text-gray-100 max-w-[90%] text-center leading-relaxed">
+            {post.description || 'No description available for this startup.'}
+          </p>
+        </div>
       </section>
       <section className="flex flex-col my-3 justify-center w-full startup-card shadow-inner shadow-gray-950 rounded-xl p-2">
         <div className="flex flex-col items-center">
@@ -77,7 +80,7 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
                 </div>
               </div>
               <div className="flex items-end">
-                <p className="startup-card_btn">{post.category}</p>
+                <p className="startup-card_btn text-white">{post.category}</p>
               </div>
             </div>
           </div>

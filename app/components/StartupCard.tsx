@@ -31,57 +31,72 @@ const StartupCard = ({ post }: { post: StartupTypeCard }) => {
     return text
   }
   return (
-    <li className="startup-card flex-col mb-5  shadow-inner shadow-gray-950">
-      <div className="flex items-center justify-between">
-        <p className="startup-card_date mr-4">{formatDate(_createdAt)}</p>
-        <div className="flex items-center gap-1">
-          <FaEye className="h-4 w-4 text-white" />
-          <span className="text-base font-medium">{views}</span>
+    <li className="startup-card">
+      {/* Author info and title */}
+      <div className="flex items-start gap-4">
+        <div className="flex-1 space-y-3">
+          <div className="flex items-center justify-between text-gray-400">
+            <p className="startup-card_date">{formatDate(_createdAt)}</p>
+            <div className="flex items-center gap-1.5">
+              <FaEye className="h-3.5 w-3.5" />
+              <span className="text-sm">{views}</span>
+            </div>
+          </div>
+          <div className="flex-row flex justify-between">
+            <div className="space-y-2 flex-col">
+              <Link href={`/user/${author?._id}`}>
+                <p className="text-sm font-medium text-blue-400 hover:text-blue-300 transition-colors">
+                  {author?.name}
+                </p>
+              </Link>
+              <Link href={`/posts/${_id}`}>
+                <h3 className="text-xl font-bold text-white hover:text-gray-200 transition-colors leading-tight">
+                  {title}
+                </h3>
+              </Link>
+            </div>
+            <div className="flex">
+              <Link href={`/user/${author?._id}`} className="flex-shrink-0">
+                <Image
+                  src={imageUrl}
+                  alt={author?.name || "Author's avatar"}
+                  width={40}
+                  height={40}
+                  className="rounded-full ring-2 ring-blue-500/20"
+                />
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
-      <div className="flex mt-5 gap-5">
-        <div className="flex-1">
-          <Link href={`/user/${author?._id}`}>
-            <p className="text-base font-medium">{author?.name}</p>
-          </Link>
-          <Link href={`/user/${_id}`}>
-            <h3 className="text-2xl font-bold">{title}</h3>
-          </Link>
-        </div>
-        <Link href={`/user/${author?._id}`}>
-          <Image
-            src={imageUrl}
-            alt="placeholder"
-            width={48}
-            height={48}
-            className="rounded-full"
-          />
-        </Link>
-      </div>
-      <Link href={`/user/${_id}`}>
-        <div className="">
-          <p className="startup-card_desc line-clamp-3">
-            {truncateText(description, 145)}
-          </p>
-        </div>
-        <div className="flex-shrink-0 h-40 mt-4">
-          {image && (
+
+      {/* Content */}
+      <Link href={`/posts/${_id}`} className="group block">
+        {image && (
+          <div className="relative overflow-hidden rounded-xl">
             <Image
               src={image}
-              alt={title || 'Startup image'}
+              alt={title || 'Post image'}
               width={600}
-              height={160}
-              className="startup-card_img"
+              height={300}
+              className="startup-card_img group-hover:scale-105 transition-transform duration-300"
             />
-          )}
-        </div>
+          </div>
+        )}
+        <p className="startup-card_desc mt-3 line-clamp-2">
+          {truncateText(description, 120)}
+        </p>
       </Link>
-      <div className="flex gap-3 mt-5 justify-between items-center">
-        <Link href={`/?query=${category?.toLowerCase()}`}>
-          <p className="text-base font-semibold">{category}</p>
+
+      {/* Footer */}
+      <div className="flex items-center justify-between mt-auto pt-2">
+        <Link href={`/?category=${category?.toLowerCase()}`}>
+          <span className="text-sm font-medium text-white hover:text-blue-300 transition-colors">
+            #{category}
+          </span>
         </Link>
-        <Button className="startup-card_btn" asChild>
-          <Link href={`/startup/${_id}`}>Details</Link>
+        <Button className="startup-card_btn text-white" asChild>
+          <Link href={`/startup/${_id}`}>Read More</Link>
         </Button>
       </div>
     </li>

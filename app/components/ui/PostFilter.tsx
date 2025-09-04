@@ -2,21 +2,25 @@
 import React from 'react'
 import { Button } from './button'
 import { cn } from '@/lib/utils'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useRouter, useSearchParams, usePathname } from 'next/navigation'
 
 const PostFilter = () => {
   const router = useRouter()
   const searchParams = useSearchParams()
   const filter = searchParams.get('filter') || 'all'
 
+  const pathname = usePathname()
+
   const handleFilterChange = (value: 'all' | 'trends' | 'latest') => {
     const params = new URLSearchParams(searchParams.toString())
+
     if (value === 'all') {
       params.delete('filter')
     } else {
       params.set('filter', value)
     }
-    router.push(`/?${params.toString()}`)
+
+    router.replace(`${pathname}?${params.toString()}`)
   }
 
   return (

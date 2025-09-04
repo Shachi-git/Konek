@@ -60,8 +60,22 @@ const SignUpForm = () => {
         }
       }
 
-      if (result.status == 'SUCCESS') {
-        router.push(`/startup/${result._id}`)
+      if (result.status === 'SUCCESS') {
+        // Sign in the user after successful registration
+        const response = await fetch('/api/auth/callback/credentials', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            username: formValues.username,
+            password: formValues.password,
+          }),
+        })
+
+        if (response.ok) {
+          router.push('/') // Redirect to home page after successful sign in
+        } else {
+          router.push('/login') // Redirect to login if auto-sign-in fails
+        }
       }
 
       return { status: 'SUCCESS', error: '' }
