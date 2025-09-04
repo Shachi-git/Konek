@@ -2,6 +2,7 @@ import { StartupCardSkeleton } from '@/app/components/StartupCard'
 import UserStartups from '@/app/components/UserStartups'
 import { auth } from '@/auth'
 import { client } from '@/sanity/lib/client'
+import { urlFor } from '@/sanity/lib/image'
 import { AUTHOR_BY_ID_QUERY } from '@/sanity/lib/queries'
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
@@ -15,8 +16,12 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
 
   const user = await client.fetch(AUTHOR_BY_ID_QUERY, { id })
   if (!user) notFound()
-
-  console.log(user)
+  const imageUrl =
+    user?.image && user.image.asset?._ref
+      ? urlFor(user.image).width(120).height(120).url()
+      : typeof session?.user?.image === 'string'
+        ? session.user.image
+        : 'https://placehold.co/120x120'
   return (
     <div>
       <section
@@ -25,7 +30,7 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
       >
         <div className="flex flex-col items-center">
           <Image
-            src={user?.image || 'https://placehold.co/48x48'}
+            src={imageUrl}
             alt="placeholder"
             width={120}
             height={120}
@@ -41,8 +46,13 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
         </div>
       </section>
       <section className="m-2 resultheading">
-        <p className="resultheading text-2xl">
-          {session?.id ? 'Your ' : 'All '}Posts
+        <p className="resultheading text-2xl mt-8">
+          {session?.user?.id === user._id
+            ? 'Your '
+            : user?.name
+              ? `${user.name}'s `
+              : 'User'}
+          Posts
         </p>
         <ul className="mt-7 card_grid">
           <Suspense fallback={<StartupCardSkeleton />}>

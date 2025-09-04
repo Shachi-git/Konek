@@ -9,7 +9,8 @@ icon: UserIcon,
 fields: [
     defineField({
         name: 'id',
-        type: 'number',
+        type: 'string',
+        readOnly: true,
     }),
     defineField({
         name: 'name',
@@ -25,11 +26,19 @@ fields: [
     }),
     defineField({
         name: 'image',
-        type: 'url',
-    }),
+        type: 'image',
+        options: {
+            hotspot: true,
+        },
+        }),
     defineField({
         name: 'bio',
         type: 'text',
+    }),
+    defineField({
+      name: 'password',
+      type: 'string',
+      validation: Rule => Rule.min(8).warning('Password should be at least 8 characters'),
     }),
 ],
 preview:{

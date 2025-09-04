@@ -6,6 +6,7 @@ import Image from 'next/image'
 import { Button } from './ui/button'
 import { Startup, Author } from '@/sanity/types'
 import { Skeleton } from '@/components/ui/skeleton'
+import { urlFor } from '@/sanity/lib/image'
 
 export type StartupTypeCard = Omit<Startup, 'author'> & { author?: Author }
 const StartupCard = ({ post }: { post: StartupTypeCard }) => {
@@ -20,6 +21,9 @@ const StartupCard = ({ post }: { post: StartupTypeCard }) => {
     description = '',
   } = post || {}
 
+  const imageUrl = author?.image
+    ? urlFor(author.image).width(120).height(120).url()
+    : 'https://placehold.co/120x120'
   const truncateText = (text: string, maxLength: number) => {
     if (text.length > maxLength) {
       return text.slice(0, maxLength) + '...'
@@ -29,10 +33,10 @@ const StartupCard = ({ post }: { post: StartupTypeCard }) => {
   return (
     <li className="startup-card flex-col mb-5  shadow-inner shadow-gray-950">
       <div className="flex items-center justify-between">
-        <p className="startup-card_date mr-4">{formatDate(post._createdAt)}</p>
+        <p className="startup-card_date mr-4">{formatDate(_createdAt)}</p>
         <div className="flex items-center gap-1">
           <FaEye className="h-4 w-4 text-white" />
-          <span className="text-base font-medium">{post.views}</span>
+          <span className="text-base font-medium">{views}</span>
         </div>
       </div>
       <div className="flex mt-5 gap-5">
@@ -46,7 +50,7 @@ const StartupCard = ({ post }: { post: StartupTypeCard }) => {
         </div>
         <Link href={`/user/${author?._id}`}>
           <Image
-            src={author?.image || 'https://placehold.co/48x48'}
+            src={imageUrl}
             alt="placeholder"
             width={48}
             height={48}

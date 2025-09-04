@@ -27,7 +27,7 @@ const StartupForm = () => {
       const result = await createPitch(prevState, formData, pitch)
 
       if (result.status == 'SUCCESS') {
-        router.push(`/startup/${result._id}`)
+        router.push('/')
       }
 
       setPitch('')
@@ -192,10 +192,7 @@ const StartupForm = () => {
       <Button
         type="submit"
         className="w-full py-3 rounded-full 
-           bg-gradient-to-r from-teal-400 to-emerald-500
-           font-semibold text-white shadow-md
-           hover:from-teal-300 hover:to-emerald-400 
-           hover:shadow-lg hover:shadow-emerald-400/30
+           bg-gradient-to-r bg-blue-900 hover:bg-blue-950 text-white shadow-md
            transition-all duration-300"
         disabled={isPending}
       >

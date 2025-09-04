@@ -7,6 +7,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import markdownit from 'markdown-it'
 import View from '@/app/components/View'
+import { urlFor } from '@/sanity/lib/image'
 
 export const experimental_ppr = true
 
@@ -16,6 +17,10 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
   const post = await client.fetch(STARTUPS_BY_ID_QUERY, { id })
 
   if (!post) return notFound()
+
+  const imageUrl = post.author?.image
+    ? urlFor(post.author.image).width(120).height(120).url()
+    : 'https://placehold.co/120x120'
 
   const parsedContent = md.render(post?.pitch || '')
 
@@ -48,7 +53,7 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
                 <div>
                   <Link href={`/user/${post.author?._id}`}>
                     <Image
-                      src={post.author.image}
+                      src={imageUrl}
                       alt="avatar"
                       width={64}
                       height={64}

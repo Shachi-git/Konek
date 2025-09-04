@@ -1,21 +1,41 @@
 import SearchForm from '../components/SearchForm'
-import StartupCard, { StartupTypeCard } from '../components/StartupCard'
+import StartupCard, {
+  StartupCardSkeleton,
+  StartupTypeCard,
+} from '../components/StartupCard'
 import { STARTUPS_QUERY } from '@/sanity/lib/queries'
 import { sanityFetch, SanityLive } from '@/sanity/lib/live'
 import { auth } from '@/auth'
+import { Suspense } from 'react'
+import PostFilter from '../components/ui/PostFilter'
 
 export default async function Home({
   searchParams,
 }: {
-  searchParams: Promise<{ query?: string }>
+  searchParams: Promise<{
+    query?: string
+    filter?: 'all' | 'trends' | 'latest'
+  }>
 }) {
-  const query = (await searchParams).query
+  const { query, filter } = await searchParams
   const params = { search: query || null }
   const session = await auth()
 
   console.log('Session:', session?.id)
+  console.log('User ID:', session?.user?.id)
 
   const { data: posts } = await sanityFetch({ query: STARTUPS_QUERY, params })
+
+  let filteredPosts = posts
+
+  if (filter === 'trends') {
+    filteredPosts = [...posts].sort((a, b) => (b.views || 0) - (a.views || 0))
+  } else if (filter === 'latest') {
+    filteredPosts = [...posts].sort(
+      (a, b) =>
+        new Date(b._createdAt).getTime() - new Date(a._createdAt).getTime(),
+    )
+  }
 
   return (
     <div className="m-5 mx-2">
@@ -24,27 +44,34 @@ export default async function Home({
       opacity-90 justify-center"
       >
         <h1 className="heading text-center text-shadow-xl">
-          Pitch your startup, connect with entrepreneurs
+          Connect with the latest trends
         </h1>
         <p className="semiheading text-center text-lg">
-          Submit Ideas, Vote on Pitches, and Get Noticed in Virtual
-          Competitions.
+          see what people are posting, discover fresh perspectives, and share
+          your own ideas with the community
         </p>
         <SearchForm query={query} />
       </section>
 
       <section className="m-2 resultheading">
-        <p className="resultheading text-2xl">
-          {query ? `Search results for "${query}"` : 'All Startups'}
-        </p>
+        <div className="flex flex-row justify-between items-center mt-6">
+          <div>
+            <p className="resultheading text-2xl">
+              {query ? `Search results for "${query}"` : 'All Posts'}
+            </p>
+          </div>
+          <PostFilter />
+        </div>
 
         <ul className="mt-7 card_grid">
-          {posts?.length > 0 ? (
-            posts.map((post: StartupTypeCard) => (
-              <StartupCard post={post} key={post?._id} />
+          {filteredPosts?.length > 0 ? (
+            filteredPosts.map((post: StartupTypeCard) => (
+              <Suspense fallback={<StartupCardSkeleton />} key={post?._id}>
+                <StartupCard post={post} key={post?._id} />
+              </Suspense>
             ))
           ) : (
-            <p className="no-results">No Startups found</p>
+            <p className="no-results">No Result Found</p>
           )}
         </ul>
       </section>
