@@ -23,25 +23,25 @@ export default async function Home({
 
   // Handle session state
   if (!session) {
-    console.log('No active session');
+    console.log('No active session')
   } else {
-    console.log('User ID:', session.user?.id);
+    console.log('User ID:', session.user?.id)
   }
 
-  let posts;
+  let posts
   try {
-    const response = await sanityFetch({ 
-      query: STARTUPS_QUERY, 
+    const response = await sanityFetch({
+      query: STARTUPS_QUERY,
       params,
       tags: ['post'], // Add cache tag
-    });
+    })
     if (!response || !response.data) {
-      throw new Error('No data received from Sanity');
+      throw new Error('No data received from Sanity')
     }
-    posts = response.data;
+    posts = response.data
   } catch (error) {
-    console.error('Error fetching posts:', error);
-    posts = [];
+    console.error('Error fetching posts:', error)
+    posts = []
   }
 
   let filteredPosts = posts || []
@@ -72,7 +72,7 @@ export default async function Home({
       </section>
 
       <section className="m-2 resultheading">
-        <div className="flex flex-row justify-between items-center mt-6">
+        <div className="flex flex-col lg:flex-row md:flex-row justify-between items-center mt-6">
           <div>
             <p className="resultheading text-2xl">
               {query ? `Search results for "${query}"` : 'All Posts'}

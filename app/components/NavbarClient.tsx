@@ -33,7 +33,7 @@ const NavbarClient = () => {
   return (
     <header>
       <nav className="bg-gradient-to-t from-gray-900 to-gray-950 min-h-[28px] shadow-xl shadow-gray-950">
-        <div className="container mx-auto flex justify-between items-center min-h-[80px]">
+        <div className="container px-10 flex justify-between items-center min-h-[80px]">
           <Link
             href="/"
             className="text-white font-extralight text-2xl font-serif italic"
