@@ -30,7 +30,14 @@ export default async function Home({
 
   let posts;
   try {
-    const response = await sanityFetch({ query: STARTUPS_QUERY, params });
+    const response = await sanityFetch({ 
+      query: STARTUPS_QUERY, 
+      params,
+      tags: ['post'], // Add cache tag
+    });
+    if (!response || !response.data) {
+      throw new Error('No data received from Sanity');
+    }
     posts = response.data;
   } catch (error) {
     console.error('Error fetching posts:', error);

@@ -12,7 +12,9 @@ export const config = {
 export async function middleware(request: NextRequest) {
   // Check for auth cookie names that Next Auth might use
   const hasAuthCookie = request.cookies.has('__Secure-next-auth.session-token') || 
-                       request.cookies.has('next-auth.session-token')
+                       request.cookies.has('next-auth.session-token') ||
+                       request.cookies.has('__Secure-next-auth.jwt-session') ||
+                       request.cookies.has('next-auth.jwt-session')
 
   const isAuthRoute = request.nextUrl.pathname.startsWith('/api/auth')
   const isProtectedRoute = request.nextUrl.pathname.startsWith('/startup/create') ||

@@ -14,9 +14,14 @@ export const experimental_ppr = true
 const page = async ({ params }: { params: Promise<{ id: string }> }) => {
   const id = (await params).id
   const md = markdownit()
-  const post = await client.fetch(STARTUPS_BY_ID_QUERY, { id })
-
-  if (!post) return notFound()
+  let post;
+  try {
+    post = await client.fetch(STARTUPS_BY_ID_QUERY, { id })
+    if (!post) return notFound()
+  } catch (error) {
+    console.error('Error fetching startup:', error)
+    return notFound()
+  }
 
   const imageUrl = post.author?.image
     ? urlFor(post.author.image).width(120).height(120).url()
