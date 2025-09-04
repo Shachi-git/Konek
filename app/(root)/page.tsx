@@ -21,12 +21,23 @@ export default async function Home({
   const params = { search: query || null }
   const session = await auth()
 
-  console.log('Session:', session?.id)
-  console.log('User ID:', session?.user?.id)
+  // Handle session state
+  if (!session) {
+    console.log('No active session');
+  } else {
+    console.log('User ID:', session.user?.id);
+  }
 
-  const { data: posts } = await sanityFetch({ query: STARTUPS_QUERY, params })
+  let posts;
+  try {
+    const response = await sanityFetch({ query: STARTUPS_QUERY, params });
+    posts = response.data;
+  } catch (error) {
+    console.error('Error fetching posts:', error);
+    posts = [];
+  }
 
-  let filteredPosts = posts
+  let filteredPosts = posts || []
 
   if (filter === 'trends') {
     filteredPosts = [...posts].sort((a, b) => (b.views || 0) - (a.views || 0))

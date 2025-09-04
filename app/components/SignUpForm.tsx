@@ -17,7 +17,6 @@ const SignUpForm = () => {
     image: null as File | null,
   })
 
-  const [errors, setErrors] = useState<Record<string, string>>({})
   const fileInputRef = useRef<HTMLInputElement | null>(null)
   const [imagePreview, setImagePreview] = useState<string | null>(null)
   const router = useRouter()

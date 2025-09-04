@@ -49,20 +49,40 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       // For GitHub OAuth
       if (account?.provider === "github" && profile) {
         const { id, login, bio } = profile as { id: string; login: string; bio?: string }
+        const githubId = id.toString() // Convert numeric ID to string
 
         // Check if user exists in Sanity
         const existingUser = await client
           .withConfig({ useCdn: false })
-          .fetch(AUTHOR_BY_GITHUB_ID_QUERY, { id })
+          .fetch(AUTHOR_BY_GITHUB_ID_QUERY, { id: githubId })
 
         if (!existingUser) {
+          // First, upload the avatar image if it exists
+          let imageAsset = null
+          if (user.image) {
+            try {
+              const imageResponse = await fetch(user.image)
+              const imageBuffer = await imageResponse.arrayBuffer()
+              const imageAssetDoc = await writeClient.assets.upload('image', Buffer.from(imageBuffer))
+              imageAsset = {
+                _type: 'image',
+                asset: {
+                  _type: 'reference',
+                  _ref: imageAssetDoc._id
+                }
+              }
+            } catch (error) {
+              console.error('Error uploading avatar:', error)
+            }
+          }
+
           await writeClient.create({
             _type: "author",
-            id,
+            id: githubId,
             name: user.name,
             username: login,
             email: user.email,
-            image: user.image || null,
+            image: imageAsset,
             bio: bio || "",
           })
         }
@@ -93,13 +113,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     },
 
 async session({ session, token }): Promise<Session> {
-      return {
-        ...session,
-        user: {
-          ...session.user,
-          id: typeof token.id === 'string' ? token.id : undefined
-        },
+      if (session?.user) {
+        session.user.id = token.id as string;
       }
+      return session;
     },
   },
 })
