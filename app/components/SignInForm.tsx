@@ -29,7 +29,7 @@ const SignInForm = () => {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+    <form onSubmit={handleSubmit} className="flex flex-col gap-3 pb-5">
       <label htmlFor="username" className="font-semibold">
         Username or Email
       </label>

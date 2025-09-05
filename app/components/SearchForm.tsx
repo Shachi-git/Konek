@@ -19,7 +19,7 @@ const SearchForm = ({ query }: { query?: string }) => {
       <input
         name="query"
         defaultValue={query}
-        placeholder="Search for startups, ideas, or entrepreneurs..."
+        placeholder="Search..."
         className={cn(
           'p-3 flex-grow rounded-full text-base bg-blend-color focus:outline-none font-extralight',
           'w-full',

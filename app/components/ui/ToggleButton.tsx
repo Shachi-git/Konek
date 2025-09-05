@@ -20,7 +20,7 @@ const SignInSignUpToggle: React.FC<SignInSignUpToggleProps> = ({ mode }) => {
   }
 
   return (
-    <div className="flex flex-col items-center mb-5">
+    <div className="flex flex-col items-center mb-5 -mt-2">
       <div className="inline-flex border-b border-gray-600">
         {(['sign in', 'sign up'] as const).map((value, i) => (
           <Button

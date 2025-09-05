@@ -79,8 +79,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           await writeClient.create({
             _type: "author",
             id: githubId,
+            _id: user.id, 
             name: user.name,
-            username: login,
+            username: login || profile?.login,
             email: user.email,
             image: imageAsset,
             bio: bio || "",
@@ -98,10 +99,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       // If user object is present (initial sign in)
       if (user) {
         // If GitHub OAuth, user.id is GitHub ID, so fetch Sanity _id
-        if (account?.provider === "github" && profile) {
+        if (account?.provider === "github" && profile && typeof profile?.id === 'string') {
           const sanityUser = await client
             .withConfig({ useCdn: false })
-            .fetch(AUTHOR_BY_GITHUB_ID_QUERY, { id: profile.id })
+            .fetch(AUTHOR_BY_GITHUB_ID_QUERY, { id: profile.id.toString() })
           token.id = sanityUser?._id || null
         } else {
           // For Credentials login, user.id is already Sanity _id
@@ -113,8 +114,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     },
 
 async session({ session, token }): Promise<Session> {
-      if (session?.user) {
-        session.user.id = token.id as string;
+      if (session?.user && typeof token.id === 'string') {
+        session.user.id = token.id;
       }
       return session;
     },

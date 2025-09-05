@@ -2,28 +2,23 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import { useSession, signOut } from 'next-auth/react'
-import { useEffect, useState } from 'react'
-import { AUTHOR_BY_ID_QUERY } from '@/sanity/lib/queries'
-import { client } from '@/sanity/lib/client'
+import { signOut } from 'next-auth/react'
 import { urlFor } from '@/sanity/lib/image'
 
-const NavbarClient = () => {
-  const { data: session, status } = useSession()
-  const [user, setUser] = useState<any>(null)
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      if (session?.user?.id) {
-        const result = await client.fetch(AUTHOR_BY_ID_QUERY, {
-          id: session.user.id,
-        })
-        setUser(result)
+interface Props {
+  session: any
+  user: {
+    _id: string
+    username?: string
+    image?: {
+      asset?: {
+        _ref: string
       }
     }
-    fetchUser()
-  }, [session?.user?.id])
+  } | null
+}
 
+const NavbarClient = ({ session, user }: Props) => {
   const imageUrl = user?.image?.asset?._ref
     ? urlFor(user.image).width(120).height(120).url()
     : typeof session?.user?.image === 'string'
@@ -33,7 +28,7 @@ const NavbarClient = () => {
   return (
     <header>
       <nav className="bg-gradient-to-t from-gray-900 to-gray-950 min-h-[28px] shadow-xl shadow-gray-950">
-        <div className="container px-10 flex justify-between items-center min-h-[80px]">
+        <div className="px-6 flex justify-between items-center min-h-[80px]">
           <Link
             href="/"
             className="text-white font-extralight text-2xl font-serif italic"
@@ -41,7 +36,7 @@ const NavbarClient = () => {
             Konek
           </Link>
           <div className="flex items-center gap-5">
-            {status === 'authenticated' && session?.user ? (
+            {session?.user ? (
               <>
                 <Link
                   href="/startup/create"
@@ -56,7 +51,7 @@ const NavbarClient = () => {
                   Logout
                 </button>
                 <Link
-                  href={`/user/${session.user.id}`}
+                  href={`/user/${session.user.id || user?._id}`}
                   className="text-white defaultfont p-1 flex flex-row space-x-2 justify-center items-center rounded-md hover:bg-gray-600"
                 >
                   <Image
@@ -65,11 +60,12 @@ const NavbarClient = () => {
                     width={34}
                     height={34}
                     className="rounded-full"
+                    priority
                   />
                   <div className="flex flex-col overflow-hidden">
-                    <span className="text-white">{session.user?.name}</span>
+                    <span className="text-white">{session.user.name}</span>
                     <span className="text-gray-300 text-xs font-extralight">
-                      @{user?.username}
+                      @{user?.username || 'unknown'}
                     </span>
                   </div>
                 </Link>

@@ -95,7 +95,10 @@ const SignUpForm = () => {
   })
 
   return (
-    <form action={formAction} className="flex flex-col gap-4 max-w-md px-1">
+    <form
+      action={formAction}
+      className="flex flex-col gap-4 max-w-md px-1  pb-5"
+    >
       <div
         className="mx-auto mb-4 w-28 h-28 rounded-full overflow-hidden border-4 border-blue-600 cursor-pointer bg-gray-700 flex items-center justify-center"
         onClick={handleImageClick}

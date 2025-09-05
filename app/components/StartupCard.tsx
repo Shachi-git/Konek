@@ -24,6 +24,7 @@ const StartupCard = ({ post }: { post: StartupTypeCard }) => {
   const imageUrl = author?.image
     ? urlFor(author.image).width(120).height(120).url()
     : 'https://placehold.co/120x120'
+
   const truncateText = (text: string, maxLength: number) => {
     if (text.length > maxLength) {
       return text.slice(0, maxLength) + '...'
