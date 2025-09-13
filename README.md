@@ -4,38 +4,25 @@ Konek is a full-stack blog platform built with Next.js and Sanity (headless CMS)
 
 Overview
 
-Konek provides a streamlined blogging experience where users can:
-
-Log in and manage their own content
-
-Publish blog posts using a headless CMS
-
-Browse other users’ posts with filters for views and latest
-
-Access a modern, responsive, and user-friendly interface
+- Konek provides a streamlined blogging experience where users can:
+- Log in and manage their own content
+- Publish blog posts using a headless CMS
+- Browse other users’ posts with filters for views and latest
+- Access a modern, responsive, and user-friendly interface
 
 Features
 
-Manual authentication for secure login
+- Manual authentication for secure login
+- Content creation and publishing powered by Sanity CMS
+- Filtering options to sort posts by views or recency
+- CMS integration for centralized post and user data management
+- Responsive design with a clean and modern UI
+- Deployment on Vercel for production-ready hosting
 
-Content creation and publishing powered by Sanity CMS
-
-Filtering options to sort posts by views or recency
-
-CMS integration for centralized post and user data management
-
-Responsive design with a clean and modern UI
-
-Deployment on Vercel for production-ready hosting
-
-Planned enhancements: advanced search, improved UI components, and accessibility improvements
+Planned enhancements: advanced search, edit and delete, (like, share, & comment), improved UI components, and accessibility improvements
 
 Tech Stack
-
-Frontend: Next.js, React, Tailwind CSS
-
-Backend/CMS: Sanity (Headless CMS)
-
-Deployment: Vercel
-
-Version Control: Git, GitHub
+> Frontend: Next.js, React, Tailwind CSS
+> Backend/CMS: Sanity (Headless CMS)
+> Deployment: Vercel
+> Version Control: Git, GitHub
