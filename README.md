@@ -1,5 +1,4 @@
-<<<<<<< HEAD
-Konek – Blog Platform
+#Konek – Blog Platform
 
 Konek is a full-stack blog platform built with Next.js and Sanity (headless CMS). It allows users to log in, publish posts, and browse content with filtering features. The application is deployed on Vercel for fast and scalable hosting.
 
